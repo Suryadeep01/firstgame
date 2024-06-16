@@ -1,11 +1,10 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
-import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
 class TRexGame extends FlameGame with TapDetector {
-  late SpriteAnimationComponent tRex;
+  late SpriteComponent tRex;
   SpriteComponent? obstacle;
   bool isJumping = false;
   double jumpVelocity = -600;
@@ -16,7 +15,7 @@ class TRexGame extends FlameGame with TapDetector {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    await startGame();
+    startGame();
   }
 
   Future<void> startGame() async {
@@ -24,26 +23,17 @@ class TRexGame extends FlameGame with TapDetector {
     jumpVelocity = -600;
     isJumping = false;
 
-    // Load T-Rex Animation
-    final tRexSpriteSheet = await images.load('t_rex_sprite_sheet.png');
-    final tRexSpriteSize = Vector2(100, 100); // Adjust size as needed
-    final tRexSprites = SpriteSheet(
-      image: tRexSpriteSheet,
-      srcSize: tRexSpriteSize,
-    );
-
-    tRex = SpriteAnimationComponent(
-      animation: tRexSprites.createAnimation(row: 0, stepTime: 0.1),
-      size: tRexSpriteSize,
-      position: Vector2(50, size.y - 150),
-    );
-
+    // Load T-Rex
+    tRex = SpriteComponent()
+      ..sprite = await loadSprite('t_rex.png')
+      ..size = Vector2(100, 100)  // Increased size
+      ..position = Vector2(50, size.y - 150); // Adjusted position for increased size
     add(tRex);
 
     // Load Obstacle
     obstacle = SpriteComponent()
       ..sprite = await loadSprite('obstacle.png')
-      ..size = Vector2(100, 100)  // Increased size
+      ..size = Vector2(50, 50)  // Increased size
       ..position = Vector2(size.x, size.y - 100); // Starting position off-screen to the right
     add(obstacle!);
   }
